@@ -1,0 +1,20 @@
+<center>
+{% if checking_plans|length > 0 %}
+    {% for mechanic, checking_plans in checking_plans %}
+        Experto: {{ mechanic}} 
+        <h1>PLANES</h2>
+        <hr>
+        {% for plan in checking_plans %}
+            <h2>{{ plan.title }}</h3>
+            <h4>COSTO: ${{ plan.cost }}</h4><br>
+            SERVICIOS INCLUIDOS</h3> <br>
+            {% for service in plan.services.all %}
+                - {{ service.title }} <br>
+            {% endfor %}
+            <hr>
+        {% endfor %}
+    {% endfor %}
+    {% else %}
+        No hay cotizaciones disponibles :(
+{% endif %}
+</center>

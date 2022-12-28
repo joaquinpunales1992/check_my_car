@@ -1,0 +1,17 @@
+<center>
+<h2>Detalle de su consulta</h2>
+<hr>
+<h3>Publication ID:</h3>{{ publication_id }} <br>
+<h3>Titulo de publication: </h3>{{ publication_title }} <br>
+<h3>Marca:</h3>{{ vehicle_brand }}<br>
+<h3>Modelo:</h3>{{ vehicle_model }} <br>
+<h3>KMs:</h3>{{ vehicle_kilometers }} <br>
+
+<hr>
+
+<form method="GET" id="validate_step_form">
+    <input name="form_id" value="cotizar" type="hidden"/>
+    <input name="quote_request_pk" value="{{ quote_request_pk }}" type="hidden"/>
+    <input type="submit" value="Cotizar"/>
+</form>
+</center>
