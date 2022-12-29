@@ -1,17 +1,35 @@
-<center>
-<h2>Detalle de su consulta</h2>
-<hr>
-<h3>Publication ID:</h3>{{ publication_id }} <br>
-<h3>Titulo de publication: </h3>{{ publication_title }} <br>
-<h3>Marca:</h3>{{ vehicle_brand }}<br>
-<h3>Modelo:</h3>{{ vehicle_model }} <br>
-<h3>KMs:</h3>{{ vehicle_kilometers }} <br>
+{% extends 'base.html' %}
 
-<hr>
+{% block nav%}
+<div class="navbar">
+    <div class="navbar-inner">
+          <ul class="nav nav-tabs">
+             <li><a href="#step1" data-toggle="tab" class="nav-link disabled" aria-disabled="true"><span class="mb-0 h1">Validar Publicacion</span></a></li>
+             <li class="active"><a href="#step2" data-toggle="tab" class="nav-link active" style="background:#03c7ff" aria-disabled="true"><span class="mb-0 h1">Cotizar</span></a></li>
+             <li><a href="#step3" class="nav-link disabled"  data-toggle="tab"><span class="mb-0 h1">Elegir cotizacion</span></a></li>
+             <li><a href="#step4" data-toggle="tab" class="nav-link disabled"  aria-disabled="true"><span class="mb-0 h1">Pagar</span></a></li>
+          </ul>
+    </div>
+ </div>
+{% endblock %}
 
-<form method="GET" id="validate_step_form">
-    <input name="form_id" value="cotizar" type="hidden"/>
-    <input name="quote_request_pk" value="{{ quote_request_pk }}" type="hidden"/>
-    <input type="submit" value="Cotizar"/>
-</form>
-</center>
+{% block content %}
+
+    <h2>Detalle de su consulta</h2>
+    <hr>
+    <h3>Publication ID:</h3>{{ publication_id }} <br>
+    <h3>Titulo de publication: </h3>{{ publication_title }} <br>
+    <h3>Marca:</h3>{{ vehicle_brand }}<br>
+    <h3>Modelo:</h3>{{ vehicle_model }} <br>
+    <h3>KMs:</h3>{{ vehicle_kilometers }} <br>
+
+    <hr>
+
+    <form class="tab-content" method="GET" id="validate_step_form">
+       <div class="tab-pane active" id="step2">
+          <input name="form_id" value="cotizar" type="hidden"/>
+          <input name="quote_request_pk" value="{{ quote_request_pk }}" type="hidden"/>
+          <button class="btn btn-default btn-ok" type="submit" value="cotizar">Cotizar</button>
+       </div>
+    </form>
+ {% endblock %}

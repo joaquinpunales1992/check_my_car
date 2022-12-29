@@ -1,9 +1,24 @@
+{% extends 'base.html' %}
 
-<center>
-    <h2>Pega el link Mercado Libre</h2>
-    <form method="GET" action="" id="validar_link">
-        <input name="form_id" value="validate" type="hidden"/>
-        <input class="searchfield" id="searchbox" name="publication_link" type="text" value="{{ request.GET.q }}" placeholder="https://auto.mercadolibre.com..."/>
-        <input type="submit" value="Cotizar"/>
-    </form>
-</center>
+    {% block nav %}
+    <div class="navbar">
+        <div class="navbar-inner">
+              <ul class="nav nav-tabs">
+                 <li class="active"><a href="#step1" data-toggle="tab" class="nav-link active" style="background:#03c7ff" aria-disabled="true"><span class="mb-0 h1">Validar Publicacion</span></a></li>
+                 <li><a href="#step2" data-toggle="tab" class="nav-link disabled" aria-disabled="true"><span class="mb-0 h1">Cotizar</span></a></li>
+                 <li><a href="#step3" data-toggle="tab" class="nav-link disabled"><span class="mb-0 h1">Elegir cotizacion</span></a></li>
+                 <li><a href="#step4" data-toggle="tab" class="nav-link disabled"  aria-disabled="true"><span class="mb-0 h1">Pagar</span></a></li>
+              </ul>
+        </div>
+     </div>
+    {% endblock %}
+    {% block content %}
+        <form class="tab-content" method="GET" action=""  id="validate">
+        <div class="tab-pane active" id="step1">
+            <p>Pega el link de la publicacion</p>
+            <input name="form_id" value="validate" type="hidden"/>
+            <input class="form-control" id="searchbox" name="publication_link" type="text" value="{{ request.GET.q }}" required="" placeholder="https://auto.mercadolibre.com...">
+            <button class="btn btn-default btn-ok" type="submit" value="validar">Validar</button>
+        </div>
+        </form>
+    {% endblock %}
