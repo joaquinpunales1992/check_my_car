@@ -3,60 +3,78 @@
 
 
 {% block nav %}
-    <div class="navbar">
-       <div class="navbar-inner">
-             <ul class="nav nav-tabs">
-                <li><a href="#step1" data-toggle="tab" class="nav-link disabled" aria-disabled="true"><span class="mb-0 h1">Validar Publicacion</span></a></li>
-                <li><a href="#step2" data-toggle="tab" class="nav-link disabled" aria-disabled="true"><span class="mb-0 h1">Cotizar</span></a></li>
-                <li class="active"><a href="#step3" class="nav-link active" style="background:#03c7ff"  data-toggle="tab"><span class="mb-0 h1">Elegir cotizacion</span></a></li>
-                <li><a href="#step4" data-toggle="tab" class="nav-link disabled"  aria-disabled="true"><span class="mb-0 h1">Pagar</span></a></li>
-             </ul>
-       </div>
-    </div>
+    <li><a href="#step1" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Validar</span></a></li>
+    <li><a href="#step2" data-toggle="tab" class="navbar-brand" ><span class="mb-0 h4">Cotizar</span></a></li>
+    <li class="active"><a href="#step3" class="navbar-brand"  data-toggle="tab"><span class="mb-0 h4">Elegir cotizacion</span></a></li>
+    <li><a href="#step4" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Pagar</span></a></li>
 {% endblock %}
 
+
 {% block content %}
-    {% if checking_plans|length > 0 %}
-        {% for mechanic, checking_plans in checking_plans %}
-                <div class="flex flex2">
-                    <div class="card flex-items-workshop"  style="width: 16rem;">
-                        <img src="{% static 'images/taller.png' %}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ mechanic }}</h5>
-                            <p><h5>Some quick example text to build on the card title and make up the bulk of the card's content.</h5></p>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">30 años de experiencia</li>
-                            <li class="list-group-item">Lifan | BYD | Renault</li>
-                            <li class="list-group-item">Disponibilidad am/pm</li>
-                            <li class="list-group-item">Taller disponible</li>
-                            
-                        </ul>
-                    </div>   
-                    {% for plan in checking_plans %}
-                        <div class="card flex-items" style="width: 16rem;">
-                            <img src="{% static 'images/mecanico.png' %}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ plan.title }}</h5>
-                                <p><h5>Some quick example text to build on the card title and make up the bulk of the card's content.</h5></p>
+<header class="masthead">
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-12">
+                <div class="text-left text-white">
+                    <h1 class="mb-5">Elige una cotización</h1>
+                    {% if checking_plans|length > 0 %}
+                        {% for mechanic, checking_plans in checking_plans %}
+                            <div class="flex flex2">
+                                <div class="card flex-items-workshop"  style="width: 16rem;">
+                                    {% if mechanic.mechanical_workshop.logo  %}
+                                        <img src="{% static '/logos/taller.png' %}" class="card-img-top" alt="...">
+                                    {% else %}
+                                    <img src="{% static 'images/default_mechanic_logo.png' %}" class="card-img-top" alt="...">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ mechanic }}</h5>
+                                        {% if mechanic.mechanical_workshop %}
+                                            <p><h5>{{ mechanic.mechanical_workshop.brief_description }}</h5></p>
+                                        {% else %}
+                                            <p><h5>{{ mechanic.brief_description }}</h5></p>
+                                        {% endif %}
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        {% if mechanic.years_of_experience > 0 %}<li class="list-group-item">30 años de experiencia</li>{% endif %}
+                                        <li class="list-group-item">{{ mechanic.specialities }}</li>
+                                        {% if mechanic.city %}<li class="list-group-item">{{ mechanic.city }}</li>{% endif %}
+                                        {% if mechanic.get_availaibity != 'na' %}<li class="list-group-item">Disponibilidad {{ mechanic.get_availability }}</li>{% endif %}
+                                        {% if mechanic.is_official_workshop %}<li class="list-group-item">Taller Oficial</li>{% endif %}
+                                        {% if mechanic.mechanical_workshop %}<li class="list-group-item">Cuenta con taller propio</li>{% endif %}
+                                        {% if mechanic.independent %}<li class="list-group-item">Mecanico Independiente</li>{% endif %}
+                                    </ul>
+                                </div>   
+                                {% for plan in checking_plans %}
+                                    <div class="card flex-items" style="width: 18rem;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ plan.title }}</h5>
+                                            <p><h5>{{ plan.summary }}</h5></p>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            {% if plan.services.all|length > 0 %}
+                                                <li class="list-group-item list-group-item-info">SERVICIOS INCLUIDOS</li>
+                                                {% for service in plan.services.all %}
+                                                    <li class="list-group-item">{{ service.title }} </li>
+                                                {% endfor %}
+                                            {% endif %}
+                                            <li class="list-group-item list-group-item-dark"><strong>$ {{ plan.cost }}</strong></li>
+                                        </ul>
+                                        <div class="card-body">
+                                            <input name="checking_plan" value="{{ plan.pk }}" type="hidden"/>
+                                            <input name="mechanic" value="{{ mechanic.pk }}" type="hidden"/>
+                                            <input name="checking_plan" value="{{ plan.pk }}" type="hidden"/>
+                                            <button href="#" type="submit" value="pay" class="btn  btn-lg btn-success btn-primary">Pagar</a>
+                                        </div>
+                                    </div>                
+                                {% endfor %}
                             </div>
-                            <ul class="list-group list-group-flush">
-                                {% if plan.services.all|length > 0 %}
-                                    <li class="list-group-item list-group-item-info">SERVICIOS INCLUIDOS</li>
-                                    {% for service in plan.services.all %}
-                                        <li class="list-group-item">{{ service.title }} </li>
-                                    {% endfor %}
-                                {% endif %}
-                                <li class="list-group-item list-group-item-dark"><strong>$ {{ plan.cost }}</strong></li>
-                            </ul>
-                            <div class="card-body">
-                                <button href="#" type="submit" class="btn  btn-lg btn-success btn-primary">Pagar</a>
-                            </div>
-                        </div>                
-                    {% endfor %}
+                        {% endfor %} 
+                    {% else %}
+                        No hay cotizaciones disponibles :(
+                    {% endif %}
                 </div>
-        {% endfor %} 
-    {% else %}
-        No hay cotizaciones disponibles :(
-    {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
 {% endblock %}

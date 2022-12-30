@@ -1,24 +1,90 @@
 {% extends 'base.html' %}
+{% load static %}
 
-    {% block nav %}
-    <div class="navbar">
-        <div class="navbar-inner">
-              <ul class="nav nav-tabs">
-                 <li class="active"><a href="#step1" data-toggle="tab" class="nav-link active" style="background:#03c7ff" aria-disabled="true"><span class="mb-0 h1">Validar Publicacion</span></a></li>
-                 <li><a href="#step2" data-toggle="tab" class="nav-link disabled" aria-disabled="true"><span class="mb-0 h1">Cotizar</span></a></li>
-                 <li><a href="#step3" data-toggle="tab" class="nav-link disabled"><span class="mb-0 h1">Elegir cotizacion</span></a></li>
-                 <li><a href="#step4" data-toggle="tab" class="nav-link disabled"  aria-disabled="true"><span class="mb-0 h1">Pagar</span></a></li>
-              </ul>
+{% block nav %}
+<li class="active"><a href="#step1" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Validar</span></a></li>
+<li><a href="#step2" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Cotizar</span></a></li>
+<li><a href="#step3" class="navbar-brand"><span class="mb-0 h4">Elegir cotizacion</span></a></li>
+<li><a href="#step4" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Pagar</span></a></li>
+{% endblock %}
+ 
+{% block content %}
+
+<header class="masthead">
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-6">
+                <div class="text-center text-white">
+                    <!-- Page heading-->
+                    <h1 class="mb-5">Pega tu link de publicación y cotizá una inspección!</h1>
+                   
+                    <form class="form-subscribe" id="contactForm">
+                        <!-- Email address input-->
+                        <div class="row">
+                            <form class="tab-content" method="GET" action="" id="validate"></form>
+                                <div class="col">
+                                    {% csrf_token %}
+                                    <input name="form_id" value="validate" type="hidden"/>
+                                    <input class="form-control form-control-lg" id="publication_link" name="publication_link"  placeholder="https://auto.mercadolibre.com..." data-sb-validations="required"/>
+                                    <div class="invalid-feedback text-white" data-sb-feedback="publication_link:required">Un link de publicacion es requerido para continuar</div>
+                                </div>
+                            <div class="col-auto"><button class="btn btn-success btn-lg" value="validar" type="submit">Validar</button></div>
+                            </form>
+                        </div>
+                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+                    </form>
+                </div>
+            </div>
         </div>
-     </div>
-    {% endblock %}
-    {% block content %}
-        <form class="tab-content" method="GET" action=""  id="validate">
-        <div class="tab-pane active" id="step1">
-            <p>Pega el link de la publicacion</p>
-            <input name="form_id" value="validate" type="hidden"/>
-            <input class="form-control" id="searchbox" name="publication_link" type="text" value="{{ request.GET.q }}" required="" placeholder="https://auto.mercadolibre.com...">
-            <button class="btn btn-default btn-ok" type="submit" value="validar">Validar</button>
+    </div>
+</header>
+
+<section class="features-icons bg-light text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                    <div class="features-icons-icon d-flex"><i class="bi-window m-auto text-primary"></i></div>
+                    <h3>Cotizá</h3>
+                    <p class="lead mb-0">This theme will look great on any device, no matter the size!</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                    <div class="features-icons-icon d-flex"><i class="bi-layers m-auto text-primary"></i></div>
+                    <h3>Elegi el plan</h3>
+                    <p class="lead mb-0">Featuring the latest build of the new Bootstrap 5 framework!</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                    <div class="features-icons-icon d-flex"><i class="bi-terminal m-auto text-primary"></i></div>
+                    <h3>Listo</h3>
+                    <p class="lead mb-0">Ready to use with your own content, or customize the source files!</p>
+                </div>
+            </div>
         </div>
-        </form>
-    {% endblock %}
+    </div>
+</section>
+
+<section class="call-to-action text-white text-center" id="signup">
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-6">
+                <h2 class="mb-4">Sos Mecanico o tenes un taller? Registrate!</h2>
+                <form class="form-subscribe" id="contactFormFooter" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="col-auto"></div><a href="{% url 'register_mechanic' %}" type="button" class="btn btn-primary btn-lg">Registrarme</a></div>
+                        </div>
+                    </div>   
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+</body>
+</html>

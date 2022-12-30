@@ -15,10 +15,19 @@ class MechanicalWorkshopAdmin(admin.ModelAdmin):
     list_display = ['commercial_name', 'city', 'is_official_workshop',]
     #list_display = [field.name for field in MechanicalWorkshop._meta.get_fields()]
 
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in Service._meta.get_fields()]
+# @admin.register(Service)
+# class ServiceAdmin(admin.ModelAdmin):
+#     list_display = ['title', 'special_tool_required', 'requires_workshop', 'hours_required',]
 
-@admin.register(CheckingPlan)
+# @admin.register(CheckingPlan)
+# class CheckingPlanAdmin(admin.ModelAdmin):
+#     list_display = ['title', 'cost',]
+
+
+class ServiceAdmin(admin.TabularInline):
+    model = Service
+
 class CheckingPlanAdmin(admin.ModelAdmin):
-    list_display = ['title', 'cost',]
+   inlines = [ServiceAdmin,]
+
+admin.site.register(CheckingPlan ,CheckingPlanAdmin)

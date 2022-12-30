@@ -1,9 +1,14 @@
 from django.views import generic
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from pages.models import QuoteRequest, Mechanic
+from django.contrib.auth.models import Group
+from pages.forms import MechanicForm
 import requests
+import re
 
 
 def substring_after(s, delim):
@@ -28,8 +33,12 @@ def validate_link(request):
 
     if request.GET.get('form_id') == 'validate':
         publication_link = request.GET.get('publication_link')
-        publication_id = "MLU-620915974".replace('-', '') # TODO: get proper id from publication_link
+        publication_id = re.search('MLU-[0-9]+', publication_link)
+        if not publication_id:
+            # TODO: propagate error message
+            return render(request, request_step_template)
         API_ENDPOINT =  "https://api.mercadolibre.com/items/"
+        publication_id = publication_id.group(0).replace('-', '')
         query_response = requests.get(f"{API_ENDPOINT}{publication_id}?include_attributes=all")
         if query_response.status_code == 200:
             response_json = query_response.json()
@@ -102,15 +111,33 @@ def validate_link(request):
             #TODO: contemplate non 200 response
             pass
     elif request.GET.get('form_id') == 'cotizar':
-        if 'quote_request_pk' in request.GET:
+        if 'cotizar' in request.GET and 'quote_request_pk' in request.GET:
             checking_plans = get_quotes(quote_request_pk=request.GET.get('quote_request_pk'))
             context = {'checking_plans': checking_plans}
             return render(request, quote_step_template, context)
+        elif 'wrong_car' in request.GET:
+            return render(request, request_step_template)
         else:
             # Quote not found
             return render(request, error_template)
-        return render(request, quote_step_template, context)
     else:
         return render(request, request_step_template, context)
+
+
+def register_mechanic(request):
+    if request.method == 'POST':
+        form = MechanicForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            mechanic_group = Group.objects.get(name='Mechanic')
+            mechanic_group.user_set.add(new_user)
+            messages.info(request, "Thanks for registering. You are now logged in.")
+            new_user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request, new_user)
+            return HttpResponseRedirect("/admin/pages/mechanic/add/")
+    form = MechanicForm()
+    return render (request=request, template_name="register_mechanic.html", context={"register_form":form})
 
     
