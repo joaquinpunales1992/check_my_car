@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+    <li><a href="#step1" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Validar</span></a></li>
+    <li><a href="#step2" data-toggle="tab" class="navbar-brand" ><span class="mb-0 h4">Cotizar</span></a></li>
+    <li><a href="#step3" class="navbar-brand"  data-toggle="tab"><span class="mb-0 h4">Elegir cotizacion</span></a></li>
+    <li class="active"><a href="#step4" data-toggle="tab" class="navbar-brand"><span class="mb-0 h4">Pagar</span></a></li>
+{% endblock %}
+
+{% block content %}
+<header class="masthead">
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-6">
+                <div class="text-left text-white">
+                    {% if paid %}
+                        <h2 class="mb-4">Felicitaciones el pago ha sido realizado con exito!</h2>
+                    {% else %}
+                        <h2 class="mb-4">Lamentablemente algo salió mal con el pago</h2>
+                    {% endif %}
+                    <br><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% endblock %}
