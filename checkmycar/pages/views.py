@@ -6,12 +6,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from pages.models import QuoteRequest, Mechanic, CheckingPlan
 from django.contrib.auth.models import Group
-from pages.forms import MechanicForm
+from pages.forms import MechanicForm, NewClientForm
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import requests
 import re
 from django.conf import settings
+from django.contrib.auth.forms import AuthenticationForm 
 
 
 def substring_after(s, delim):
@@ -189,12 +190,64 @@ def register_mechanic(request):
             mechanic_group = Group.objects.get(name='Mechanic')
             mechanic_group.user_set.add(new_user)
             messages.info(request, "Thanks for registering. You are now logged in.")
-            new_user = authenticate(username=form.cleaned_data['username'],
-                                    password=form.cleaned_data['password1'],
-                                    )
+            new_user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1'],
+            )
             login(request, new_user)
             return HttpResponseRedirect("/admin/pages/mechanic/add/")
     form = MechanicForm()
-    return render (request=request, template_name="register_mechanic.html", context={"register_form":form})
+    return render (request, template_name="register_mechanic.html", context={"register_form":form})
 
-    
+
+def mechanic_portal(request, request_pk):
+    generate_inform_template = 'generate_inform.html'
+    mechanic_portal_template = "mechanic_portal.html"
+
+    if 'inform_quote_request_pk' in request.GET:
+        quote_request = QuoteRequest.objects.get(pk=request.GET.get('inform_quote_request_pk'))
+        return render(request, template_name=generate_inform_template, context={'quote_request': quote_request})
+
+    quote_requests = QuoteRequest.objects.all() #filter(pk=request_pk)
+    return render(request, template_name=mechanic_portal_template, context={'quote_requests': quote_requests})
+
+
+def client_requests(request):
+    client_requests_template='client_requests.html'
+    return render(request, template_name=client_requests_template, context={})
+
+
+def client_login(request):
+    import pdb;pdb.set_trace()
+    client_login_template = 'clients_portal/client_login.html'
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("main:homepage")
+            else:
+                messages.error(request,"Invalid username or password.")
+        else:
+            messages.error(request,"Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request, template_name=client_login_template, context={"login_form":form})
+
+
+def client_signup(request):
+    import pdb;pdb.set_trace()
+    client_signup_template='clients_portal/client_signup.html'
+    if request.method == "POST":
+        form = NewClientForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful." )
+            return redirect("main:homepage")
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    form = NewClientForm()
+    return render (request=request, template_name=client_signup_template, context={"register_form":form})

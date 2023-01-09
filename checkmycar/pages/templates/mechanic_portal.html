@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+<li>Mis solicitudes</li>
+{% endblock %}
+
+{% block content %}
+<header class="masthead">
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-xl-12">
+                <div class="text-left text-white">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID Solicitud</th>
+                                <th scope="col">Titulo publicacion</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col">Modelo</th>
+                                <th scope="col">Tel. Contacto</th>
+                                <th scope="col">Ubicacion</th>
+                                <th scope="col">Generar Informe</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in quote_requests %}
+                                <tr>
+                                    <th scope="row">{{ request.pk }}</th>
+                                    <td>{{ request.publication_title }}</td>
+                                    <td>{{ request.vehicle_brand }}</td>
+                                    <td>{{ request.vehicle_model }}</td>
+                                    <td>{{ request.phone_number }}</td>
+                                    <td>{{ request.seller_address_city }}, {{ request.seller_address_state }}, {{ request.seller_address_country}}</td>
+                                    <td>
+                                        <form class="tab-content" method="GET">
+                                            <button class="btn btn-success btn-lg" type="submit" name="inform_quote_request_pk" value="{{ request.pk }}">Generar Informe</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}

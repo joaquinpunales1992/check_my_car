@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+<li>Gnerar Informe</li>
+{% endblock %}
+
+{% block content %}
+    <header class="masthead">
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-xl-12">
+                    <div class="text-left text-white">
+                        <h4>Publication ID: <small class="text-muted">{{ quote_request.publication_id }}</small></h4>
+                        <h4>Titulo de publicacion: <small class="text-muted">{{ quote_request.publication_title }}</small></h4>
+                        <h4>Marca: <small class="text-muted">{{ quote_request.vehicle_brand }}</small></h4>
+                        <h4>Modelo: <small class="text-muted">{{ quote_request.vehicle_model }}</small></h4>
+                        <h4>KMs: <small class="text-muted">{{ quote_request.vehicle_kilometers }}</small></h4>
+                        <hr>
+
+                        <form method="GET" id="inform_id">
+                            <textarea class="form-control" rows="10" name="form_notes" form="inform_id"></textarea>
+                            <button class="btn btn-success btn-lg"  type="submit" name="inform_quote_request_pk" value="{{ request.pk }}">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}

@@ -1,7 +1,8 @@
 from django.db import models
-
+import uuid
 
 class QuoteRequest(models.Model):
+    #uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     publication_id = models.CharField(max_length=10, blank=True)
     publication_title = models.CharField(max_length=50, blank=True)
     vehicle_brand = models.CharField(max_length=20, blank=True)
